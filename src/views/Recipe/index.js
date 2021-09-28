@@ -6,6 +6,7 @@ import {
   CardContent,
   makeStyles,
 } from "@material-ui/core";
+import Pagination from "@material-ui/lab/Pagination";
 
 import { deleteRecipe, getRecipes } from "../../services/api/recipe";
 
@@ -23,6 +24,8 @@ const useStyles = makeStyles({
 
 const Recipe = (props) => {
   const [recipes, setRecipes] = useState([]);
+  const [paginatedRecipes, setPaginatedRecipes] = useState([]);
+  const [page, setPage] = useState(1);
 
   const classes = useStyles();
 
@@ -33,6 +36,7 @@ const Recipe = (props) => {
   const fetchRecipes = async () => {
     await getRecipes({}, (response) => {
       setRecipes(response.recipes);
+      setPaginatedRecipes(response.recipes.slice(page * 10, (page + 1) * 10));
     });
   };
 
@@ -41,6 +45,12 @@ const Recipe = (props) => {
       let _recipes = recipes.filter((recipe) => recipe._id != id);
       setRecipes(_recipes);
     });
+  };
+
+  const paginateRecipes = (val) => {
+    setPage(val);
+    let _recipes = recipes.slice((val - 1) * 10, val * 10);
+    setPaginatedRecipes(_recipes);
   };
 
   return (
@@ -53,8 +63,20 @@ const Recipe = (props) => {
         Create Recipe
       </Button>
       <Typography>Recipes List</Typography>
-      {recipes &&
-        recipes.map((recipe) => (
+      {paginatedRecipes && (
+        <Pagination
+          count={
+            recipes.length % 10 === 0
+              ? recipes.length / 10
+              : recipes.length / 10 + 1
+          }
+          page={page}
+          onChange={(event, val) => paginateRecipes(val)}
+        />
+      )}
+
+      {paginatedRecipes &&
+        paginatedRecipes.map((recipe) => (
           <Card className={classes.root}>
             <CardContent>
               <Typography>
