@@ -16,7 +16,7 @@ jobs:
       - name: Build
         run: |
           yarn
-          yarm run build
+          yarn run build
         env:
           SERVER_URL: ${{ secrets.SERVER_URL }}
 
