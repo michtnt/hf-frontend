@@ -14,18 +14,21 @@ import RecipeForm from "./views/Recipe/component/recipeForm";
 function App() {
   const isLoggedIn = localStorage.getItem("hf-frontend@token");
 
-  console.log(process.env.PUBLIC_URL);
   return (
     <Router basename={process.env.PUBLIC_URL}>
       <Switch>
         {/* render login first, but could be better way */}
-        <Route exact path={`/login`} component={Login} />
+        <Route
+          exact
+          path={process.env.PUBLIC_URL + "/login"}
+          component={Login}
+        />
         {routes.map((route, i) => {
           const Component = route.component;
           return (
             <Route
               key={`router${i}`}
-              path={route.path}
+              path={process.env.PUBLIC_URL + route.path}
               exact={route.exact}
               render={(props) =>
                 isLoggedIn || !route.needAuth ? (
