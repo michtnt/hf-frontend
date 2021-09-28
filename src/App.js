@@ -44,6 +44,12 @@ function App() {
 const routes = [
   {
     exact: true,
+    path: "/",
+    component: Recipe,
+    needAuth: true,
+  },
+  {
+    exact: true,
     path: "/register",
     component: Register,
     needAuth: false,
