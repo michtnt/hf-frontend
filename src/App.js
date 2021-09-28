@@ -18,13 +18,17 @@ function App() {
     <Router>
       <Switch>
         {/* render login first, but could be better way */}
-        <Route exact path="/login" component={Login} />
+        <Route
+          exact
+          path={`${process.env.PUBLIC_URL}/login`}
+          component={Login}
+        />
         {routes.map((route, i) => {
           const Component = route.component;
           return (
             <Route
               key={`router${i}`}
-              path={route.path}
+              path={`${process.env.PUBLIC_URL}${route.path}`}
               exact={route.exact}
               render={(props) =>
                 isLoggedIn || !route.needAuth ? (
