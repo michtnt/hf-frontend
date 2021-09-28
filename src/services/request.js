@@ -3,6 +3,7 @@ import { SERVER_URL } from "./config";
 
 // TODO need improvement
 export const api = async (method, url, data = {}, authentication, callback) => {
+  console.log(`${SERVER_URL}${url}`);
   let headers = { "Content-Type": "application/json" };
 
   if (authentication) {
