@@ -1,5 +1,6 @@
 {
   "name": "hf-frontend",
+  "homepage": "https://tanoto-the-explorer.github.io/hf-frontend/",
   "version": "0.1.0",
   "private": true,
   "dependencies": {

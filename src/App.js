@@ -15,20 +15,16 @@ function App() {
   const isLoggedIn = localStorage.getItem("hf-frontend@token");
 
   return (
-    <Router basename={process.env.PUBLIC_URL}>
+    <Router>
       <Switch>
         {/* render login first, but could be better way */}
-        <Route
-          exact
-          path={process.env.PUBLIC_URL + "/login"}
-          component={Login}
-        />
+        <Route exact path={"/login"} component={Login} />
         {routes.map((route, i) => {
           const Component = route.component;
           return (
             <Route
               key={`router${i}`}
-              path={process.env.PUBLIC_URL + route.path}
+              path={route.path}
               exact={route.exact}
               render={(props) =>
                 isLoggedIn || !route.needAuth ? (
