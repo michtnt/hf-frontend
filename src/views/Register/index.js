@@ -26,7 +26,8 @@ const Register = (props) => {
 
     signup({ email, password }, (response) => {
       localStorage.setItem("hf-frontend@token", response.token);
-      props.history.push("/recipe");
+      window.location.href = "/recipe";
+      // props.history.push("/recipe");
     });
   };
 
