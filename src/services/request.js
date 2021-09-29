@@ -25,6 +25,7 @@ export const api = async (method, url, data = {}, authentication, callback) => {
       callback(response.data);
     }
   } catch (e) {
+    console.log(e.reponse.data);
     window.alert(e.response?.data?.message || "Something wrong");
     return false;
   }
