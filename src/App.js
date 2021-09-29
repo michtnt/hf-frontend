@@ -10,6 +10,8 @@ import Recipe from "./views/Recipe";
 import Login from "./views/Login";
 import Register from "./views/Register";
 import RecipeForm from "./views/Recipe/component/recipeForm";
+import Menu from "./views/Menu";
+import MenuForm from "./views/Menu/component/menuForm";
 
 function App() {
   const isLoggedIn = localStorage.getItem("hf-frontend@token");
@@ -65,6 +67,18 @@ const routes = [
     exact: true,
     path: "/recipe/:type/:id",
     component: RecipeForm,
+    needAuth: true,
+  },
+  {
+    exact: true,
+    path: "/menu",
+    component: Menu,
+    needAuth: true,
+  },
+  {
+    exact: true,
+    path: "/menu/:type/:id",
+    component: MenuForm,
     needAuth: true,
   },
 ];

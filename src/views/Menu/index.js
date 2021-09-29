@@ -9,11 +9,7 @@ import {
 } from "@material-ui/core";
 import { Pagination, Rating } from "@material-ui/lab";
 
-import {
-  deleteRecipe,
-  getRecipes,
-  reviewRecipe,
-} from "../../services/api/recipe";
+import { deleteMenu, getMenus, reviewMenu } from "../../services/api/menu";
 
 const useStyles = makeStyles({
   root: {
@@ -27,9 +23,9 @@ const useStyles = makeStyles({
   },
 });
 
-const Recipe = (props) => {
-  const [recipes, setRecipes] = useState([]);
-  const [paginatedRecipes, setPaginatedRecipes] = useState([]);
+const Menu = (props) => {
+  const [menus, setMenus] = useState([]);
+  const [paginatedMenus, setPaginatedMenus] = useState([]);
   const [page, setPage] = useState(1);
 
   const [message, setMessage] = useState("");
@@ -39,32 +35,32 @@ const Recipe = (props) => {
   const classes = useStyles();
 
   useEffect(() => {
-    fetchRecipes();
+    fetchMenus();
   }, [reviewForm]);
 
-  const fetchRecipes = async () => {
-    await getRecipes({}, (response) => {
-      setRecipes(response.recipes);
-      setPaginatedRecipes(response.recipes.slice((page - 1) * 10, page * 10));
+  const fetchMenus = async () => {
+    await getMenus({}, (response) => {
+      setMenus(response.menus);
+      setPaginatedMenus(response.menus.slice((page - 1) * 10, page * 10));
     });
   };
 
-  const delRecipe = async (id) => {
-    await deleteRecipe({}, id, (response) => {
-      let _recipes = recipes.filter((recipe) => recipe._id != id);
-      setRecipes(_recipes);
-      fetchRecipes();
+  const delMenu = async (id) => {
+    await deleteMenu({}, id, (response) => {
+      let _menus = menus.filter((menu) => menu._id != id);
+      setMenus(_menus);
+      fetchMenus();
     });
   };
 
-  const paginateRecipes = (val) => {
+  const paginateMenus = (val) => {
     setPage(val);
-    let _recipes = recipes.slice((val - 1) * 10, val * 10);
-    setPaginatedRecipes(_recipes);
+    let _menus = menus.slice((val - 1) * 10, val * 10);
+    setPaginatedMenus(_menus);
   };
 
   const addReview = async (id) => {
-    await reviewRecipe({ message, rating }, id, (response) => {
+    await reviewMenu({ message, rating }, id, (response) => {
       setReviewForm(false);
       setMessage("");
     });
@@ -75,51 +71,51 @@ const Recipe = (props) => {
       <Button
         variant="contained"
         color="primary"
-        onClick={() => props.history.push(`/recipe/create/new`)}
+        onClick={() => props.history.push(`/menu/create/new`)}
       >
-        Create Recipe
+        Create Menu
       </Button>
       <Button
         variant="contained"
         color="primary"
-        onClick={() => props.history.push(`/menu`)}
+        onClick={() => props.history.push(`/recipe`)}
       >
-        Menu
+        Recipe
       </Button>
-      <Typography>Recipes List</Typography>
-      {paginatedRecipes && (
+      <Typography>Menus List</Typography>
+      {paginatedMenus && (
         <Pagination
           count={
-            recipes.length % 10 === 0
-              ? recipes.length / 10
-              : Math.floor(recipes.length / 10) + 1
+            menus.length % 10 === 0
+              ? menus.length / 10
+              : Math.floor(menus.length / 10) + 1
           }
           page={page}
-          onChange={(event, val) => paginateRecipes(val)}
+          onChange={(event, val) => paginateMenus(val)}
         />
       )}
 
-      {paginatedRecipes &&
-        paginatedRecipes.map((recipe) => (
+      {paginatedMenus &&
+        paginatedMenus.map((menu) => (
           <Card className={classes.root}>
             <CardContent>
               <Typography>
                 <b>Name </b>
-                {recipe.name}
+                {menu.name}
               </Typography>
               <Typography>
                 <b>Description </b>
-                {recipe.description}
+                {menu.description || "unknown"}
               </Typography>
               <Typography>
-                <b>Prep Time </b>
-                {recipe.prep_time_minutes || "unknown"}
+                <b>Recipes</b>
               </Typography>
-              <Typography>
-                <b>Cook Time </b>
-                {recipe.cook_time_minutes || "unknown"}
-              </Typography>
-              {reviewForm == recipe._id && (
+              {menu.recipes?.map((recipe) => (
+                <div>
+                  <Typography>{recipe.name}</Typography>
+                </div>
+              ))}
+              {reviewForm == menu._id && (
                 <div>
                   <Input
                     type="text"
@@ -139,7 +135,7 @@ const Recipe = (props) => {
                   <Button
                     variant="contained"
                     color="primary"
-                    onClick={() => addReview(recipe._id)}
+                    onClick={() => addReview(menu._id)}
                   >
                     <Typography>Save Review</Typography>
                   </Button>
@@ -148,27 +144,26 @@ const Recipe = (props) => {
               )}
               <Button
                 variant="contained"
-                onClick={() => props.history.push(`/recipe/edit/${recipe._id}`)}
+                onClick={() => props.history.push(`/menu/edit/${menu._id}`)}
               >
                 <Typography>Update</Typography>
               </Button>
-              <Button variant="contained" onClick={() => delRecipe(recipe._id)}>
+              <Button variant="contained" onClick={() => delMenu(menu._id)}>
                 <Typography>Delete</Typography>
               </Button>
               <Button
                 variant="contained"
-                onClick={() => setReviewForm(recipe._id)}
+                onClick={() => setReviewForm(menu._id)}
               >
                 <Typography>Review</Typography>
               </Button>
               <Typography>
                 <b>Reviews</b>
               </Typography>
-              {recipe.reviews?.map((review) => (
+              {menu.reviews?.map((review) => (
                 <div>
                   <Typography>{review.message}</Typography>
                   <Rating name="read-only" value={review.rating} readOnly />
-                  <Typography>{review.user.email}</Typography>
                 </div>
               ))}
             </CardContent>
@@ -178,4 +173,4 @@ const Recipe = (props) => {
   );
 };
 
-export default Recipe;
+export default Menu;
