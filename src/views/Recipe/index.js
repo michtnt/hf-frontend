@@ -37,7 +37,7 @@ const Recipe = (props) => {
 
   useEffect(() => {
     fetchRecipes();
-  }, [reviewForm]);
+  }, [reviewForm, recipes]);
 
   const fetchRecipes = async () => {
     await getRecipes({}, (response) => {
