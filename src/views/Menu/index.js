@@ -164,6 +164,7 @@ const Menu = (props) => {
                 <div>
                   <Typography>{review.message}</Typography>
                   <Rating name="read-only" value={review.rating} readOnly />
+                  <Typography>{review.user.email}</Typography>
                 </div>
               ))}
             </CardContent>
