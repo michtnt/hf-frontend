@@ -27,10 +27,8 @@ const MenuForm = (props) => {
     if (id && type == "edit") {
       // update
       fetchMenu(id);
-    } else {
-      // create, fetch all recipes
-      fetchRecipes();
     }
+    fetchRecipes();
   }, []);
 
   const fetchMenu = async (id) => {
@@ -38,19 +36,12 @@ const MenuForm = (props) => {
       setRecipes(response.menu.recipes);
       setName(response.menu.name);
       setDescription(response.menu.description);
-      // state is not set yet, use response directly
-      // don't include those that is in already
-      fetchRecipes(response.menu.recipes);
     });
   };
 
   const fetchRecipes = async (recipes = []) => {
     await getRecipes({}, (response) => {
-      let _recipes = recipes.map((recipe) => recipe._id);
-      let availableRecipe = response.recipes.filter(
-        (recipe) => !_recipes.includes(recipe._id)
-      );
-      setAvailableRecipes(availableRecipe);
+      setAvailableRecipes(response.recipes);
     });
   };
 
@@ -77,14 +68,16 @@ const MenuForm = (props) => {
     });
   };
 
-  const removeRecipe = (recipeId) => {
-    let _recipes = recipes.filter((recipe) => recipe._id !== recipeId);
+  // temporary
+  const removeRecipe = (index) => {
+    let _recipes = recipes.filter((recipe, i) => i != index);
     setRecipes(_recipes);
   };
 
   const addRecipe = () => {
     let _recipes = recipes;
     _recipes.push(recipe);
+
     setRecipes(_recipes);
     setRecipe("");
   };
@@ -119,14 +112,14 @@ const MenuForm = (props) => {
           Add Recipe
         </Button>
       )}
-      {recipes?.map((recipe) => (
+      {recipes?.map((recipe, i) => (
         <Card>
           <CardContent>
             <Typography>{recipe.name}</Typography>
             <Button
               variant="contained"
               color="primary"
-              onClick={() => removeRecipe(recipe._id)}
+              onClick={() => removeRecipe(i)}
             >
               <Typography>Remove</Typography>
             </Button>
